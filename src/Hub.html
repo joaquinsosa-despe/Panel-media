@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Despegar — Hub Sr Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0D10;
+    --bg-elev:#101317;
+    --surface:#15181D;
+    --surface-2:#1A1D23;
+    --card:#15181D;
+    --border:#232830;
+    --border-strong:#2E343E;
+    --border-soft:#1C2027;
+    --text:#E6E8EB;
+    --text-2:#B4B9C2;
+    --muted:#8B92A0;
+    --dim:#5C636E;
+    --accent:#7C7FFF;
+    --accent-soft:rgba(124,127,255,0.10);
+    --accent-line:rgba(124,127,255,0.35);
+    --success:#3ECF8E;
+    --success-soft:rgba(62,207,142,0.10);
+    --danger:#F87171;
+    --warn:#F5B66A;
+    --warn-soft:rgba(245,182,106,0.10);
+    --radius:8px;
+    --radius-lg:12px;
+    --shadow-card:0 1px 0 rgba(255,255,255,0.02) inset, 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-pop:0 12px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#F6F8FB;
+    --bg-elev:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#F1F5F9;
+    --card:#FFFFFF;
+    --border:#E2E8F0;
+    --border-strong:#CBD5E1;
+    --border-soft:#EEF1F5;
+    --text:#0F172A;
+    --text-2:#334155;
+    --muted:#64748B;
+    --dim:#94A3B8;
+    --accent:#6366F1;
+    --accent-soft:rgba(99,102,241,0.10);
+    --accent-line:rgba(99,102,241,0.30);
+    --shadow-card:0 1px 2px rgba(15,23,42,0.06), 0 1px 1px rgba(15,23,42,0.04);
+    --shadow-pop:0 12px 28px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.06);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter','Segoe UI',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:13px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    transition:background-color .25s ease, color .25s ease;
+  }
+  .icon{
+    width:14px;height:14px;display:inline-block;vertical-align:-2px;flex-shrink:0;
+    stroke:currentColor;fill:none;stroke-width:1.35;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  .hub-header{
+    height:56px;background:var(--bg-elev);border-bottom:1px solid var(--border);
+    display:flex;align-items:center;padding:0 24px;gap:12px;
+    position:sticky;top:0;z-index:10;
+  }
+  .hub-brand{
+    display:flex;align-items:center;gap:10px;
+    font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:-0.01em;
+  }
+  .hub-brand-logo{
+    width:26px;height:26px;border-radius:6px;
+    background:linear-gradient(135deg, var(--accent), #4A4DCC);
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;
+    flex-shrink:0;
+  }
+  .hub-brand-sub{font-size:11px;color:var(--muted);font-weight:500;margin-left:6px}
+  .hub-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .hub-user{font-size:11px;color:var(--muted);font-weight:500}
+  .hub-user strong{color:var(--text-2);font-weight:600}
+
+  /* Theme toggle (mismo estilo que el dashboard) */
+  .theme-toggle{
+    display:inline-flex;align-items:center;background:var(--surface);
+    border:1px solid var(--border);border-radius:8px;padding:2px;gap:0;
+  }
+  .theme-toggle button{
+    width:28px;height:28px;border:none;background:transparent;
+    color:var(--muted);cursor:pointer;border-radius:6px;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:background .15s,color .15s;
+  }
+  .theme-toggle button:hover{color:var(--text-2)}
+  .theme-toggle button.on{background:var(--accent-soft);color:var(--accent)}
+  .theme-toggle svg{
+    width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.4;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+
+  /* ── Main ───────────────────────────────────────────────── */
+  .hub-main{
+    max-width:1080px;margin:0 auto;padding:48px 24px 60px;
+  }
+  .hub-headline{
+    margin-bottom:24px;
+  }
+  .hub-eyebrow{
+    font-size:10.5px;font-weight:700;color:var(--accent);
+    text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .hub-title{
+    font-size:28px;font-weight:700;color:var(--text);
+    letter-spacing:-0.02em;line-height:1.2;margin-bottom:6px;
+  }
+  .hub-subtitle{
+    font-size:13.5px;color:var(--muted);font-weight:400;max-width:520px;
+  }
+
+  /* Banner del Sr Manager */
+  .sr-banner{
+    display:flex;align-items:center;gap:14px;
+    background:var(--bg-elev);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:22px;
+  }
+  .sr-banner-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;flex-shrink:0;
+  }
+  .sr-banner-text{flex:1;min-width:0}
+  .sr-banner-role{
+    font-size:9.5px;font-weight:700;color:var(--accent);
+    text-transform:uppercase;letter-spacing:0.10em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .sr-banner-name{
+    font-size:14px;font-weight:600;color:var(--text);margin-top:2px;
+    letter-spacing:-0.005em;
+  }
+  .sr-banner-sub{
+    font-size:11.5px;color:var(--muted);margin-top:1px;
+  }
+
+  /* ── Grid de áreas ───────────────────────────────────────── */
+  .area-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  @media(max-width:980px){.area-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.area-grid{grid-template-columns:1fr}}
+
+  .area-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:22px 22px 18px;display:flex;flex-direction:column;
+    transition:border-color .15s,transform .15s,box-shadow .15s;
+    min-height:300px;
+  }
+  .area-card:hover{border-color:var(--border-strong);transform:translateY(-1px);box-shadow:var(--shadow-card)}
+  .area-card.disabled{opacity:0.72}
+  .area-card.disabled:hover{transform:none}
+
+  .area-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .area-icon{
+    width:36px;height:36px;border-radius:8px;
+    background:var(--accent-soft);color:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .area-icon svg{width:18px;height:18px}
+  .area-head-text{flex:1;min-width:0}
+  .area-name{
+    font-size:15px;font-weight:700;color:var(--text);
+    letter-spacing:-0.01em;line-height:1.2;
+  }
+  .area-tagline{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .area-soon{
+    font-size:9.5px;font-weight:700;color:var(--warn);background:var(--warn-soft);
+    border:1px solid rgba(245,182,106,0.30);padding:2px 6px;border-radius:4px;
+    text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  .area-section-label{
+    font-size:10px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:0.08em;font-weight:600;margin-bottom:8px;
+  }
+  .area-team{flex:1;display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+  .team-row{
+    display:flex;align-items:center;gap:8px;font-size:12px;
+  }
+  .avatar{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:9.5px;font-weight:700;flex-shrink:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;letter-spacing:0;
+  }
+  .team-name{flex:1;color:var(--text);font-weight:500;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .role-badge{
+    font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;
+    color:var(--muted);background:var(--surface-2);
+    border:1px solid var(--border-soft);padding:1px 6px;border-radius:3px;
+    flex-shrink:0;font-family:'JetBrains Mono',monospace;
+  }
+  .role-badge.role-manager{
+    color:var(--accent);background:var(--accent-soft);border-color:var(--accent-line);
+  }
+
+  .area-cta{
+    background:var(--accent);color:#fff;border:none;border-radius:6px;
+    padding:9px 14px;font-size:12.5px;font-weight:600;cursor:pointer;
+    font-family:'Inter',sans-serif;text-decoration:none;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    transition:filter .12s,background .12s;width:100%;
+  }
+  .area-cta:hover{filter:brightness(1.06)}
+  .area-cta.disabled{
+    background:var(--surface-2);color:var(--muted);cursor:not-allowed;
+    border:1px solid var(--border);
+  }
+  .area-cta.disabled:hover{filter:none}
+  .area-cta svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  .hub-footer{
+    max-width:1080px;margin:0 auto;padding:24px;
+    font-size:11px;color:var(--muted);text-align:center;
+    border-top:1px solid var(--border-soft);
+  }
+  .hub-footer code{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;
+    background:var(--surface-2);padding:1px 5px;border-radius:3px;color:var(--text-2);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Icon library ───────────────────────────────────────── -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-trend" viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><circle cx="17" cy="6" r="3"/><path d="M22 17a5 5 0 0 0-5-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9.5-8 10-4.5-.5-8-5-8-10V6l8-4z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><path d="M22 12l-4 2-7-1-8 4v-2l6-4-3-4h2l4 2 6-2c1 0 4 0 4 2v3z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  </defs>
+</svg>
+
+<header class="hub-header">
+  <div class="hub-brand">
+    <span class="hub-brand-logo"><svg class="icon" style="width:14px;height:14px;color:#fff"><use href="#i-plane"/></svg></span>
+    Despegar
+    <span class="hub-brand-sub">· Hub Sr Manager</span>
+  </div>
+  <div class="hub-actions">
+    <div class="hub-user" id="hubUser"></div>
+    <div class="theme-toggle" role="group" aria-label="Cambiar tema">
+      <button id="btnThemeLight" onclick="setTheme('light')" title="Tema claro" aria-label="Tema claro">
+        <svg><use href="#i-sun"/></svg>
+      </button>
+      <button id="btnThemeDark" onclick="setTheme('dark')" title="Tema oscuro" aria-label="Tema oscuro">
+        <svg><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="hub-main">
+  <div class="hub-headline">
+    <div class="hub-eyebrow">Hub · Selección de área</div>
+    <h1 class="hub-title">Media Sales · B2B &amp; B2B2C · Riesgos</h1>
+  </div>
+
+  <div class="sr-banner" id="srBanner"></div>
+
+  <div class="area-grid" id="areaGrid"></div>
+</main>
+
+<footer class="hub-footer">
+  <span>v1 · </span>
+  <span>Para sumar/quitar áreas o cambiar URLs, editar <code>AREA_CONFIG</code> en <code>Código.js</code></span>
+</footer>
+
+<script>
+  // ── Theme (mismo patrón que el dashboard) ────────────────
+  function setTheme(t){
+    if(t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    try{ localStorage.setItem('dashboard-theme', t); }catch(e){}
+    var lb = document.getElementById('btnThemeLight');
+    var db = document.getElementById('btnThemeDark');
+    if(lb) lb.classList.toggle('on', t === 'light');
+    if(db) db.classList.toggle('on', t === 'dark');
+  }
+  (function(){
+    var saved = 'dark';
+    try{ saved = localStorage.getItem('dashboard-theme') || 'dark'; }catch(e){}
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', function(){
+      var lb = document.getElementById('btnThemeLight');
+      var db = document.getElementById('btnThemeDark');
+      if(lb) lb.classList.toggle('on', saved === 'light');
+      if(db) db.classList.toggle('on', saved === 'dark');
+    });
+  })();
+
+  // ── Datos inyectados desde el backend ─────────────────────
+  var AREA_CONFIG = <?!= AREA_CONFIG_JSON ?>;
+  var SR_MANAGER  = <?!= SR_MANAGER_JSON ?>;
+  var WEB_APP_URL = '<?!= WEB_APP_URL ?>';
+  var AREA_ORDER  = ['media','b2b','risk'];
+
+  // Resolver URLs relativas a la URL completa del web app. Esto es necesario
+  // porque los Apps Script web apps viven en un iframe; links relativos navegan
+  // dentro del iframe y muestran una pantalla en blanco.
+  Object.keys(AREA_CONFIG).forEach(function(k){
+    var u = AREA_CONFIG[k].url || '';
+    if(u && u.charAt(0) === '?' && WEB_APP_URL){
+      AREA_CONFIG[k].url = WEB_APP_URL + u;
+    }
+  });
+
+  function esc(s){
+    return String(s||'').replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function initials(name){
+    var parts = String(name||'').trim().split(/\s+/).filter(Boolean);
+    if(!parts.length) return '?';
+    if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  }
+
+  function renderAreaCard(id){
+    var a = AREA_CONFIG[id];
+    if(!a) return '';
+    var ready = !!(a.url && a.url.length);
+    var teamHtml = (a.team||[]).map(function(p){
+      var roleCls = /manager/i.test(p.role||'') ? ' role-manager' : '';
+      return '<div class="team-row">'+
+        '<span class="avatar">'+esc(initials(p.name))+'</span>'+
+        '<span class="team-name" title="'+esc(p.name)+'">'+esc(p.name)+'</span>'+
+        (p.role ? '<span class="role-badge'+roleCls+'">'+esc(p.role)+'</span>' : '')+
+      '</div>';
+    }).join('');
+
+    var ctaHtml = ready
+      ? '<a class="area-cta" href="'+esc(a.url)+'" target="_top">Acceder <svg><use href="#i-arrow-right"/></svg></a>'
+      : '<button class="area-cta disabled" disabled title="URL del Apps Script aún no configurada"><svg><use href="#i-lock"/></svg> Próximamente</button>';
+
+    return '<div class="area-card'+(ready?'':' disabled')+'" data-id="'+id+'">'+
+      '<div class="area-head">'+
+        '<span class="area-icon"><svg class="icon" style="width:18px;height:18px"><use href="#'+esc(a.icon||'i-trend')+'"/></svg></span>'+
+        '<div class="area-head-text">'+
+          '<div class="area-name">'+esc(a.name)+'</div>'+
+          '<div class="area-tagline">'+esc(a.tagline||'')+'</div>'+
+        '</div>'+
+        (ready ? '' : '<span class="area-soon">Soon</span>')+
+      '</div>'+
+      '<div class="area-section-label">Equipo</div>'+
+      '<div class="area-team">'+teamHtml+'</div>'+
+      ctaHtml+
+    '</div>';
+  }
+
+  function renderGrid(){
+    var grid = document.getElementById('areaGrid');
+    grid.innerHTML = AREA_ORDER.map(renderAreaCard).join('');
+  }
+
+  function renderSrBanner(){
+    var el = document.getElementById('srBanner');
+    if(!el || !SR_MANAGER || !SR_MANAGER.name) return;
+    el.innerHTML =
+      '<span class="sr-banner-avatar">'+esc(initials(SR_MANAGER.name))+'</span>'+
+      '<div class="sr-banner-text">'+
+        '<div class="sr-banner-role">'+esc(SR_MANAGER.role||'Sr Manager')+'</div>'+
+        '<div class="sr-banner-name">'+esc(SR_MANAGER.name)+'</div>'+
+      '</div>';
+  }
+
+  renderSrBanner();
+  renderGrid();
+
+  // ── Email del usuario (best-effort, no bloquea render) ────
+  if(typeof google !== 'undefined' && google.script && google.script.run){
+    try{
+      google.script.run
+        .withSuccessHandler(function(u){
+          if(u && u.email){
+            document.getElementById('hubUser').innerHTML =
+              'Conectado como <strong>'+esc(u.email)+'</strong>' + (u.isAdmin ? ' · <span style="color:var(--accent)">admin</span>' : '');
+          }
+        })
+        .withFailureHandler(function(){})
+        .getCurrentUserInfo();
+    }catch(e){}
+  }
+</script>
+</body>
+</html>
