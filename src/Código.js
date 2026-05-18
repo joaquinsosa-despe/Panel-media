@@ -1,2 +1,4 @@
-// This file is managed via GitHub Actions deploy
-// Content pushed separately
+// https://script.google.com/a/macros/despegar.com/s/AKfycbwu2hQiExuzPkzDayrkxPluho3kaiDzc9Aw7AbPnBNSYmY84BlBDAHOpJo3HRj6C7MPvA/exec 
+// =============================================================================
+// PANEL MEDIA — Código.js  (con sección Hub Tasks añadida al final)
+// =============================================================================
