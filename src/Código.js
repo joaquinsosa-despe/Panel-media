@@ -1,1 +1,1 @@
-file_key:output.txt
+file_key:output_v1.json:stdout
