@@ -243,6 +243,118 @@
     font-family:'JetBrains Mono',monospace;font-size:10.5px;
     background:var(--surface-2);padding:1px 5px;border-radius:3px;color:var(--text-2);
   }
+
+  /* ── Tasks section ──────────────────────────────────────── */
+  .tasks-section { margin-top: 40px; }
+  .tasks-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .tasks-title {
+    font-size: 20px; font-weight: 700; color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .tasks-add-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 8px 14px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: filter .12s;
+  }
+  .tasks-add-btn:hover { filter: brightness(1.08); }
+
+  .tasks-board {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  @media(max-width:760px){ .tasks-board { grid-template-columns: 1fr; } }
+
+  .task-col {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 16px; min-height: 200px;
+  }
+  .task-col-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .task-col-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .task-col-dot.pending  { background: var(--warn); }
+  .task-col-dot.progress { background: var(--accent); }
+  .task-col-dot.done     { background: var(--success); }
+  .task-col-count {
+    margin-left: auto; font-size: 10px; background: var(--surface-2);
+    border: 1px solid var(--border-soft); border-radius: 4px;
+    padding: 1px 6px; color: var(--dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .task-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px;
+    margin-bottom: 8px; cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .task-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-card); }
+  .task-card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .task-card-desc  { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; line-height: 1.4; }
+  .task-card-footer { display: flex; align-items: center; gap: 6px; }
+  .task-card-owner {
+    font-size: 10.5px; color: var(--text-2); font-weight: 500;
+    background: var(--surface-2); border: 1px solid var(--border-soft);
+    border-radius: 3px; padding: 1px 6px;
+  }
+
+  /* ── Modal de tarea ─────────────────────────────────────── */
+  .task-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 100; display: none; align-items: center; justify-content: center;
+  }
+  .task-modal-overlay.open { display: flex; }
+  .task-modal {
+    background: var(--bg-elev); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg); padding: 24px; width: 100%; max-width: 440px;
+    box-shadow: var(--shadow-pop);
+  }
+  .task-modal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+  .task-field { margin-bottom: 14px; }
+  .task-label {
+    display: block; font-size: 11px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px;
+  }
+  .task-input, .task-select, .task-textarea {
+    width: 100%; background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 8px 10px; color: var(--text); font-size: 13px;
+    font-family: 'Inter', sans-serif; outline: none;
+    transition: border-color .15s;
+  }
+  .task-input:focus, .task-select:focus, .task-textarea:focus {
+    border-color: var(--accent);
+  }
+  .task-textarea { resize: vertical; min-height: 72px; }
+  .task-modal-foot {
+    display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;
+  }
+  .task-btn-cancel {
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-2); border-radius: 6px; padding: 7px 14px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .task-btn-save {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 7px 14px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: filter .12s;
+  }
+  .task-btn-save:hover { filter: brightness(1.08); }
+  .task-btn-delete {
+    background: transparent; border: 1px solid var(--danger);
+    color: var(--danger); border-radius: 6px; padding: 7px 14px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+    margin-right: auto;
+  }
 </style>
 </head>
 <body>
@@ -289,12 +401,74 @@
   <div class="sr-banner" id="srBanner"></div>
 
   <div class="area-grid" id="areaGrid"></div>
+
+  <!-- ── Sección Tasks ─────────────────────────────────────────── -->
+  <div class="tasks-section" id="tasksSection" style="display:none">
+    <div class="tasks-header">
+      <div>
+        <div class="hub-eyebrow" style="margin-bottom:4px">Tareas del equipo</div>
+        <h2 class="tasks-title" id="tasksTeamLabel">—</h2>
+      </div>
+      <button class="tasks-add-btn" id="btnAddTask" onclick="TasksUI.openModal()">
+        + Nueva tarea
+      </button>
+    </div>
+    <div class="tasks-board" id="tasksBoard">
+      <!-- columnas Pendiente / En proceso / Terminado -->
+    </div>
+  </div>
 </main>
 
 <footer class="hub-footer">
   <span>v1 · </span>
   <span>Para sumar/quitar áreas o cambiar URLs, editar <code>AREA_CONFIG</code> en <code>Código.js</code></span>
 </footer>
+
+<!-- Modal task -->
+<div class="task-modal-overlay" id="taskModalOverlay" onclick="if(event.target===this)TasksUI.closeModal()">
+  <div class="task-modal">
+    <div class="task-modal-title" id="tmModalTitle">Nueva tarea</div>
+
+    <div class="task-field" id="tmTeamField" style="display:none">
+      <label class="task-label">Equipo</label>
+      <select class="task-select" id="tmTeam">
+        <option value="media">Media</option>
+        <option value="b2b">B2B · B2B2C</option>
+        <option value="risk">Riesgos</option>
+      </select>
+    </div>
+
+    <div class="task-field">
+      <label class="task-label">Nombre de la tarea *</label>
+      <input class="task-input" id="tmTitle" type="text" placeholder="Ej: Revisar métricas Q2">
+    </div>
+
+    <div class="task-field">
+      <label class="task-label">Descripción</label>
+      <textarea class="task-textarea" id="tmDesc" placeholder="Contexto, detalle o link relevante…"></textarea>
+    </div>
+
+    <div class="task-field">
+      <label class="task-label">Owner</label>
+      <input class="task-input" id="tmOwner" type="text" placeholder="Ej: Juan García">
+    </div>
+
+    <div class="task-field">
+      <label class="task-label">Estado</label>
+      <select class="task-select" id="tmStatus">
+        <option value="pending">Pendiente</option>
+        <option value="progress">En proceso</option>
+        <option value="done">Terminado</option>
+      </select>
+    </div>
+
+    <div class="task-modal-foot">
+      <button class="task-btn-delete" id="tmDelete" onclick="TasksUI.deleteTask()" style="display:none">Eliminar</button>
+      <button class="task-btn-cancel" onclick="TasksUI.closeModal()">Cancelar</button>
+      <button class="task-btn-save"   onclick="TasksUI.saveTask()">Guardar</button>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── Theme (mismo patrón que el dashboard) ────────────────
@@ -406,12 +580,122 @@
           if(u && u.email){
             document.getElementById('hubUser').innerHTML =
               'Conectado como <strong>'+esc(u.email)+'</strong>' + (u.isAdmin ? ' · <span style="color:var(--accent)">admin</span>' : '');
+            // Mostrar selector de equipo en modal si es editor global
+            if(u.team === 'all'){
+              document.getElementById('tmTeamField').style.display = '';
+            }
+            TasksUI.init(u.email, u.team);
           }
         })
         .withFailureHandler(function(){})
         .getCurrentUserInfo();
     }catch(e){}
   }
+
+  // ── Hub Tasks ────────────────────────────────────────────
+  var TasksUI = (function(){
+    var tasks = [];
+    var userEmail = '';
+    var userTeam  = '';  // 'media' | 'b2b' | 'risk' | 'all'
+    var editingId = null;
+
+    var STATUSES = [
+      { id:'pending',  label:'Pendiente',  dot:'pending'  },
+      { id:'progress', label:'En proceso', dot:'progress' },
+      { id:'done',     label:'Terminado',  dot:'done'     }
+    ];
+
+    var TEAM_LABELS = { media:'Media', b2b:'B2B · B2B2C', risk:'Riesgos', all:'Todos los equipos' };
+
+    function init(email, team){
+      userEmail = email || '';
+      userTeam  = team  || '';
+      if(!userTeam) return; // sin acceso, no mostrar sección
+
+      document.getElementById('tasksSection').style.display = '';
+      document.getElementById('tasksTeamLabel').textContent =
+        (TEAM_LABELS[userTeam] || userTeam) + ' — Tareas';
+
+      load();
+    }
+
+    function load(){
+      if(typeof google === 'undefined') return;
+      google.script.run
+        .withSuccessHandler(function(data){ tasks = data || []; render(); })
+        .withFailureHandler(function(e){ console.warn('Tasks load error', e); })
+        .getHubTasks();
+    }
+
+    function render(){
+      var board = document.getElementById('tasksBoard');
+      board.innerHTML = STATUSES.map(function(s){
+        var cols = tasks.filter(function(t){ return t.status === s.id; });
+        return '<div class="task-col">'+
+          '<div class="task-col-header">'+
+            '<span class="task-col-dot '+s.dot+'"></span>'+
+            s.label+
+            '<span class="task-col-count">'+cols.length+'</span>'+
+          '</div>'+
+          (cols.length ? cols.map(cardHtml).join('') : '<div style="font-size:12px;color:var(--dim);text-align:center;padding:24px 0">Sin tareas</div>')+
+        '</div>';
+      }).join('');
+    }
+
+    function cardHtml(t){
+      return '<div class="task-card" onclick="TasksUI.openModal(\''+esc(t.id)+'\')">' +
+        '<div class="task-card-title">'+esc(t.title)+'</div>'+
+        (t.description ? '<div class="task-card-desc">'+esc(t.description)+'</div>' : '')+
+        '<div class="task-card-footer">'+
+          '<span class="task-card-owner">'+esc(t.owner||'Sin owner')+'</span>'+
+        '</div>'+
+      '</div>';
+    }
+
+    function openModal(id){
+      editingId = id || null;
+      var t = id ? tasks.find(function(x){ return x.id === id; }) : null;
+      document.getElementById('tmTitle').value      = t ? t.title       : '';
+      document.getElementById('tmDesc').value       = t ? t.description : '';
+      document.getElementById('tmOwner').value      = t ? t.owner       : '';
+      document.getElementById('tmStatus').value     = t ? t.status      : 'pending';
+      document.getElementById('tmModalTitle').textContent = id ? 'Editar tarea' : 'Nueva tarea';
+      document.getElementById('tmDelete').style.display = id ? '' : 'none';
+      document.getElementById('taskModalOverlay').classList.add('open');
+    }
+
+    function closeModal(){
+      document.getElementById('taskModalOverlay').classList.remove('open');
+      editingId = null;
+    }
+
+    function saveTask(){
+      var payload = {
+        id:          editingId,
+        team:        userTeam === 'all' ? document.getElementById('tmTeam').value : userTeam,
+        title:       document.getElementById('tmTitle').value.trim(),
+        description: document.getElementById('tmDesc').value.trim(),
+        owner:       document.getElementById('tmOwner').value.trim(),
+        status:      document.getElementById('tmStatus').value
+      };
+      if(!payload.title){ alert('El nombre de la tarea es obligatorio'); return; }
+      google.script.run
+        .withSuccessHandler(function(r){ closeModal(); load(); })
+        .withFailureHandler(function(e){ alert('Error al guardar: '+(e.message||e)); })
+        .saveHubTask(payload);
+    }
+
+    function deleteTask(){
+      if(!editingId) return;
+      if(!confirm('¿Eliminar esta tarea?')) return;
+      google.script.run
+        .withSuccessHandler(function(){ closeModal(); load(); })
+        .withFailureHandler(function(e){ alert('Error al eliminar: '+(e.message||e)); })
+        .deleteHubTask(editingId);
+    }
+
+    return { init:init, openModal:openModal, closeModal:closeModal, saveTask:saveTask, deleteTask:deleteTask };
+  })();
 </script>
 </body>
 </html>
