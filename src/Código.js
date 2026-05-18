@@ -1,1 +1,1 @@
-file_key:output_clean.txt
+file_key:output_v5.json:$.stdout
