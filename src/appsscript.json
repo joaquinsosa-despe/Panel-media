@@ -1,23 +1,9 @@
 {
   "timeZone": "America/Argentina/Buenos_Aires",
-  "dependencies": {
-    "enabledAdvancedServices": [
-      {
-        "userSymbol": "Slides",
-        "version": "v1",
-        "serviceId": "slides"
-      },
-      {
-        "userSymbol": "Sheets",
-        "version": "v4",
-        "serviceId": "sheets"
-      }
-    ]
-  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
   "webapp": {
     "executeAs": "USER_DEPLOYING",
     "access": "DOMAIN"
-  },
-  "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8"
+  }
 }
