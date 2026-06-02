@@ -1,8 +1,7 @@
 // ============================================================
 // LAYER 2: Result Cache Wrapper for getDashboardData
-// getDashboardData_BASE is the original getDashboardData in codigo.gs
-// This wrapper adds a CacheService result cache.
-// To activate: rename getDashboardData -> getDashboardData_BASE in codigo.gs
+// getDashboardData_BASE is the original getDashboardData in codigo_base.gs
+// This wrapper adds CacheService result-level caching (Layer 2).
 // ============================================================
 
 function getDashboardData(targetMonth, targetYear, groupBy, filterPartners, filterClusters, filterPos, filterLobs, filterProductos) {
