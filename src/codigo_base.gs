@@ -1,1 +1,1 @@
-output_v4.json stdout
+output_v6.json
